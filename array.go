@@ -4,12 +4,30 @@
 
 package go_queue_benchmark
 
+import (
+	"fmt"
+	"strings"
+)
+
 type ArrayQueue struct {
 	buf []interface{}
 }
 
 func NewArrayQueue(capacity int) Queue {
-	return &ArrayQueue{buf: make([]interface{}, 0, capacity)}
+	if capacity <= 0 {
+		capacity = MinQueueBufferCapacity
+	}
+	return &ArrayQueue{
+		buf: make([]interface{}, 0, capacity),
+	}
+}
+
+func (q ArrayQueue) String() string {
+	var sb = &strings.Builder{}
+	for i := 0; i < len(q.buf); i++ {
+		sb.WriteString(fmt.Sprintf("%v ", q.buf[i]))
+	}
+	return sb.String()
 }
 
 func (q *ArrayQueue) Len() int {
@@ -23,8 +41,9 @@ func (q *ArrayQueue) Front() interface{} {
 	return nil
 }
 
-func (q *ArrayQueue) Enqueue(v interface{}) {
+func (q *ArrayQueue) Enqueue(v interface{}) bool {
 	q.buf = append(q.buf, v)
+	return true
 }
 
 func (q *ArrayQueue) Dequeue() interface{} {

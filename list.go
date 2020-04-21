@@ -6,8 +6,9 @@ package go_queue_benchmark
 
 import (
 	"container/list"
+	"fmt"
+	"strings"
 )
-
 
 type ListQueue struct {
 	list *list.List
@@ -15,10 +16,17 @@ type ListQueue struct {
 
 func NewListQueue() Queue {
 	return &ListQueue{
-		list:list.New(),
+		list: list.New(),
 	}
 }
 
+func (q ListQueue) String() string {
+	var sb = &strings.Builder{}
+	for elem := q.list.Front(); elem != nil; elem = elem.Next() {
+		sb.WriteString(fmt.Sprintf("%v ", elem.Value))
+	}
+	return sb.String()
+}
 
 func (q *ListQueue) Len() int {
 	return q.list.Len()
@@ -31,8 +39,9 @@ func (q *ListQueue) Front() interface{} {
 	return nil
 }
 
-func (q *ListQueue) Enqueue(v interface{}) {
+func (q *ListQueue) Enqueue(v interface{}) bool {
 	q.list.PushBack(v)
+	return true
 }
 
 func (q *ListQueue) Dequeue() interface{} {
@@ -43,4 +52,3 @@ func (q *ListQueue) Dequeue() interface{} {
 	}
 	return nil
 }
-
